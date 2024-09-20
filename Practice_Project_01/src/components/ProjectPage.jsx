@@ -1,8 +1,20 @@
-import { Fragment, useRef, useState } from "react";
+import { forwardRef, Fragment, useRef, useImperativeHandle, useState } from "react";
+import { createPortal } from "react-dom";
 
-export default function ProjectPage({project}){
+const ProjectPage = forwardRef( function ProjectPage({project}, ref){
+
+    const page = useRef();
+
+    useImperativeHandle(ref, () => {
+        return {
+            loadProjectPage() {
+                page.current.project = project;
+            }
+        };
+    });
+
     return (
-        <div className="flex-auto ml-10">
+        <div ref={page} className="flex-auto ml-10">
             <h1>{project.name}</h1>
             <h2>{project.dueDate}</h2>
             <p>{project.description}</p>
@@ -14,4 +26,6 @@ export default function ProjectPage({project}){
             </ul>            
         </div>
     )
-}
+})
+
+export default ProjectPage;
